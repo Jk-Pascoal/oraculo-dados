@@ -1,0 +1,4 @@
+# Oráculo de Dados — Multi-Agent Pipeline
+pandas>=2.0.0
+numpy>=1.26.0
+streamlit>=1.32.0
