@@ -478,7 +478,7 @@ run_sample = st.sidebar.button("🧪 Dados de Exemplo", use_container_width=True
 
 st.sidebar.markdown("<hr style='border-color:rgba(99,102,241,0.15);'>", unsafe_allow_html=True)
 st.sidebar.markdown("**⚙️ Opções**")
-save_disk = st.sidebar.toggle("Salvar relatório em disco", value=True)
+save_disk = st.sidebar.toggle("Salvar relatório em disco", value=False)
 
 st.sidebar.markdown("""
 <hr style="border-color:rgba(99,102,241,0.15);">

@@ -44,7 +44,7 @@ def run(raw_data: list[dict]) -> dict:
     df.drop_duplicates(inplace=True)
 
     # Only fill N/A for non-numeric (object) columns; keep numeric NaN
-    str_cols = df.select_dtypes(include="object").columns
+    str_cols = df.select_dtypes(include=["object", "string"]).columns
     for col in str_cols:
         df[col] = df[col].fillna("N/A").astype(str).str.strip()
 
