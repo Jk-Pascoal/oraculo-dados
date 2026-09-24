@@ -25,15 +25,12 @@ st.set_page_config(
 # Premium CSS
 # ─────────────────────────────────────────────────────────────────────────────
 st.markdown("""
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
 <style>
 *, *::before, *::after { box-sizing: border-box; }
 
 html, body, [data-testid="stAppViewContainer"] {
     background: #080c14 !important;
-    font-family: 'Inter', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
 }
 [data-testid="stSidebar"] {
     background: #0d1117 !important;
@@ -272,14 +269,27 @@ html, body, [data-testid="stAppViewContainer"] {
     margin: 1rem 0 0.5rem;
 }
 .flow-step {
-    padding: 0.35rem 0.9rem;
+    padding: 0.3rem 0.85rem;
     border: 1px solid rgba(99,102,241,0.25);
     border-radius: 50px;
     font-size: 0.75rem;
     color: rgba(148,163,184,0.7);
     background: rgba(15,20,35,0.8);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
 }
 .flow-step.done { border-color: rgba(52,211,153,0.4); color: #34d399; background: rgba(52,211,153,0.06); }
+.flow-num {
+    font-size: 0.6rem;
+    font-weight: 700;
+    background: rgba(124,58,237,0.3);
+    border-radius: 50px;
+    padding: 0.1rem 0.35rem;
+    color: #a78bfa;
+    letter-spacing: 0.5px;
+}
+.flow-step.done .flow-num { background: rgba(52,211,153,0.15); color: #34d399; }
 .flow-arrow { color: rgba(99,102,241,0.4); font-size: 0.9rem; }
 
 /* ── Sidebar controls ──────────────────────────────────────────────────────── */
@@ -288,16 +298,24 @@ html, body, [data-testid="stAppViewContainer"] {
     background: rgba(15,20,35,0.5) !important;
     border-radius: 12px !important;
 }
-button[kind="primary"] {
+[data-testid="stSidebar"] button {
     background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
-    border: none !important; border-radius: 10px !important;
+    border: none !important;
+    border-radius: 10px !important;
     font-weight: 600 !important;
+    color: #fff !important;
     transition: all 0.2s !important;
     width: 100% !important;
 }
-button[kind="primary"]:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 25px rgba(124,58,237,0.4) !important;
+[data-testid="stSidebar"] button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(124,58,237,0.45) !important;
+}
+button[kind="primary"] {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
+    border: none !important; border-radius: 10px !important;
+    font-weight: 600 !important; color: #fff !important;
+    transition: all 0.2s !important;
 }
 
 /* ── Scrollbar ─────────────────────────────────────────────────────────────── */
@@ -313,11 +331,11 @@ button[kind="primary"]:hover {
 # ─────────────────────────────────────────────────────────────────────────────
 
 def flow_html(done: bool = False) -> str:
-    steps = [("🧹","Data Miner"),("📈","Analyst"),("🧠","Crítico"),("📝","Narrador")]
+    steps = [("01","Data Miner"),("02","Analyst"),("03","Crítico"),("04","Narrador")]
     parts = []
-    for i, (icon, lbl) in enumerate(steps):
+    for i, (num, lbl) in enumerate(steps):
         cls = "flow-step done" if done else "flow-step"
-        parts.append(f'<div class="{cls}">{icon} {lbl}</div>')
+        parts.append(f'<div class="{cls}"><span class="flow-num">{num}</span>{lbl}</div>')
         if i < len(steps) - 1:
             parts.append('<span class="flow-arrow">→</span>')
     return f'<div class="flow">{"".join(parts)}</div>'
@@ -442,7 +460,7 @@ def render_recommendations(critique: dict):
 # ─────────────────────────────────────────────────────────────────────────────
 st.markdown("""
 <div class="oracle-header">
-    <div class="oracle-title">🔮 Oráculo de Dados Autônomo</div>
+    <div class="oracle-title">&#9670; Oráculo de Dados Autônomo</div>
     <div class="oracle-caption">Transformando dados em insight, narrativa e crítica</div>
 </div>
 """, unsafe_allow_html=True)
@@ -455,10 +473,15 @@ st.markdown(flow_html(done=False), unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────────────────────────
 st.sidebar.markdown("""
 <div style="text-align:center; padding:0.75rem 0 1rem;">
-    <div style="font-size:2rem;">🔮</div>
-    <div style="color:#a78bfa; font-weight:700; font-size:1rem;">Oráculo de Dados</div>
-    <div style="color:rgba(148,163,184,0.5); font-size:0.7rem; margin-top:0.2rem; letter-spacing:1px;">
-        MULTI-AGENT PIPELINE v2
+    <div style="
+        display:inline-flex; align-items:center; justify-content:center;
+        width:48px; height:48px; border-radius:14px;
+        background:linear-gradient(135deg,#7c3aed,#4f46e5);
+        font-size:1.4rem; margin-bottom:0.5rem;
+    ">&#9670;</div>
+    <div style="color:#a78bfa; font-weight:700; font-size:1rem; letter-spacing:-0.3px;">Oráculo de Dados</div>
+    <div style="color:rgba(148,163,184,0.45); font-size:0.65rem; margin-top:0.2rem; letter-spacing:1.5px; text-transform:uppercase;">
+        Multi-Agent Pipeline v2
     </div>
 </div>
 <hr style="border-color:rgba(99,102,241,0.2); margin-bottom:1rem;">
