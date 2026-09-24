@@ -5,6 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3.11+-blue?logo=python)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-red?logo=streamlit)
 ![Pandas](https://img.shields.io/badge/Pandas-2.0+-green?logo=pandas)
+![CI](https://github.com/jk-pascoal/oraculo-dados/actions/workflows/ci.yml/badge.svg)
 
 ---
 
@@ -22,28 +23,46 @@ Raw Data
 
 ```
 oraculo-dados/
-├── app.py                        # Streamlit UI
-├── pipeline_cli.py               # Entrada via linha de comando
-├── requirements.txt
+├── app.py                        # Streamlit UI (entrada principal)
+├── requirements.txt              # Dependências de produção
+├── requirements-dev.txt          # Dependências de desenvolvimento
+├── .streamlit/
+│   └── config.toml               # Configuração de tema e servidor
+├── .github/
+│   └── workflows/
+│       └── ci.yml                # GitHub Actions CI
 ├── orchestrator/
 │   ├── __init__.py
 │   └── orchestrator.py           # Coordenador do pipeline
-└── agents/
-    ├── data_miner.py
-    ├── analyst.py
-    ├── critical_thinker.py
-    └── narrator.py
+├── agents/
+│   ├── data_miner.py
+│   ├── analyst.py
+│   ├── critical_thinker.py
+│   └── narrator.py
+└── tests/
+    ├── test_agents.py
+    └── test_orchestrator.py
 ```
 
-## 🚀 Como Executar
+## 🚀 Deploy no Streamlit Community Cloud
+
+1. Faça um fork ou push deste repositório para o seu GitHub
+2. Acesse [share.streamlit.io](https://share.streamlit.io) e clique em **New app**
+3. Selecione o repositório, branch `main` e arquivo principal `app.py`
+4. Clique em **Deploy** — o app estará disponível em alguns minutos
+
+> **Nota:** O toggle "Salvar relatório em disco" está desativado por padrão para compatibilidade com ambientes cloud.
+
+## 💻 Executar Localmente
 
 ### 1. Clonar e instalar dependências
 
 ```bash
-git clone https://github.com/<seu-usuario>/oraculo-dados.git
+git clone https://github.com/jk-pascoal/oraculo-dados.git
 cd oraculo-dados
 python -m venv .venv
-.venv\Scripts\activate        # Windows
+source .venv/bin/activate        # Linux/Mac
+.venv\Scripts\activate           # Windows
 pip install -r requirements.txt
 ```
 
@@ -55,22 +74,29 @@ streamlit run app.py
 
 Acesse em `http://localhost:8501`
 
-### 3. Rodar via linha de comando
+### 3. Rodar via orchestrator (linha de comando)
 
 ```bash
 # Com dados de exemplo embutidos
-python pipeline_cli.py
+python -c "from orchestrator.orchestrator import run_pipeline; r=run_pipeline(save_to_disk=False); print(r['narrator']['report_markdown'])"
 
 # Com seu próprio arquivo JSON
-python pipeline_cli.py meus_dados.json
+python -c "from orchestrator.orchestrator import run_pipeline; r=run_pipeline('meus_dados.json', save_to_disk=True)"
 ```
 
 O arquivo JSON deve ser uma lista de registros:
 ```json
 [
-  {"nome": "Alice", "idade": 29, "salário": 72000},
-  {"nome": "Bob",   "idade": 34, "salário": 85000}
+  {"nome": "Alice", "idade": 29, "salario": 72000},
+  {"nome": "Bob",   "idade": 34, "salario": 85000}
 ]
+```
+
+## 🧪 Testes
+
+```bash
+pip install -r requirements-dev.txt
+pytest tests/ -v
 ```
 
 ## 🤖 Agentes
@@ -87,7 +113,7 @@ O arquivo JSON deve ser uma lista de registros:
 - **Upload JSON** ou **Dados de Exemplo** integrados
 - **Métricas** em tempo real (registros, achados, falhas, outliers)
 - **Banner de confiança** 🔴/🟡/🟢 com veredito do Critical Thinker
-- **Coluna Insights** — relatório completo com download
+- **Coluna Insights** — relatório completo com download `.md`
 - **Coluna Interpretação** — 3 abas: Padrões / Riscos / Recomendações
 
 ## 📄 Licença

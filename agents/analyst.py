@@ -62,7 +62,7 @@ def run(miner_output: dict) -> dict:
         }
 
     # ── Categorical analysis ──────────────────────────────────────────────────
-    cat_cols = df.select_dtypes(include="object").columns.tolist()
+    cat_cols = df.select_dtypes(include=["object", "string"]).columns.tolist()
     categorical_stats = {}
     for col in cat_cols:
         value_counts = df[col].value_counts().head(10).to_dict()
